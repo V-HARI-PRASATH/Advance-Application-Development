@@ -1,3 +1,19 @@
+.bg{
+  background: linear-gradient(180deg, #4555b4f6, #cd82a4,rgb(174, 144, 86));
+  background-size: 200% 150%;
+  height: 100%;
+  width: 100%;
+  position:absolute;
+}
+body{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
 /* #root {
   max-width: 1280px;
   margin: 0 auto;
