@@ -8,7 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,12 +25,14 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
-    String username;
-    String password;
+    String name;
     String email;
-    String role;
 
     @OneToMany(mappedBy = "appuser")
     @JsonIgnore
     List<AppUserLoans> appUserLoans;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    UserInfo userinfo;
 }

@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,14 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Admin {
+public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
     String name;
-    String email;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    UserInfo userinfo;
+    String password;
+    String roles;
 }

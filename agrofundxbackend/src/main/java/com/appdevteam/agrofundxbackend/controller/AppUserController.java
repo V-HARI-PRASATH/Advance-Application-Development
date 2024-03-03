@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @AllArgsConstructor
-@RequestMapping("/api/appuser")
+@RequestMapping("/api/user")
 @RestController
 public class AppUserController {
 

@@ -27,9 +27,8 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUser createAppUser(AppUserRequest aur)
     {
         AppUser au=new AppUser();
-        au.setUsername(aur.getUsername());
+        au.setName(aur.getName());
         au.setEmail(aur.getEmail());
-        au.setPassword(aur.getPassword());
         return aurepo.save(au);
     }
     @Override
