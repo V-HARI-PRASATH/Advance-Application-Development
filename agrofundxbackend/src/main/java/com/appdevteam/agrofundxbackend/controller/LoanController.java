@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,7 @@ public class LoanController {
     }
     
     @GetMapping("/getusers/{loanid}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<AppUserLoansUsersResponse>> getMethodName(@PathVariable("loanid") int loanid) {
         return ResponseEntity.ok(lserv.getLoanUsers(loanid));
     }

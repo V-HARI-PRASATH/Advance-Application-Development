@@ -11,6 +11,7 @@ import com.appdevteam.agrofundxbackend.service.AppUserService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -28,6 +29,7 @@ public class AppUserController {
     private AppUserService auserv;
 
     @GetMapping("/get")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<AppUser>> getMethodName() {
         return ResponseEntity.ok(auserv.getAllAppUser());
     }
