@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,9 @@ import com.appdevteam.agrofundxbackend.service.JwtService;
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationContorller {
+
+    @Autowired
+    private AppUserRepository aurepo;
 
     @Autowired
     private JwtService jwtService;
@@ -44,6 +49,11 @@ public class AuthenticationContorller {
 
     @PostMapping("/new")
     public String addNewUser(@RequestBody UserInfo userInfo) {
+        UserInfo existingUserInfo=repository.findByName(userInfo.getName()).orElse(null);
+        if(existingUserInfo!=null)
+        {
+            return "User Already Exists";
+        }
         userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         repository.save(userInfo);
         if(userInfo.getRoles().equals("ADMIN"))
@@ -72,5 +82,25 @@ public class AuthenticationContorller {
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
+    }
+
+    @DeleteMapping("/delete")
+    public String  deleteUser()
+    {
+        Authentication curUser= SecurityContextHolder.getContext().getAuthentication();
+        String curName=curUser.getName();
+        UserInfo userInfo=repository.findByName(curName).orElse(null);
+        if(userInfo.getRoles().equals("ADMIN"))
+        {
+            return "ADMIN can't Deleted";
+        }
+        AppUser appUser=aurepo.findByUserinfo(userInfo);
+        if(!appUser.getAppUserLoans().isEmpty())
+        {
+            return "User has Pending Loans";
+        }
+        aurepo.deleteById(appUser.getId());
+        repository.deleteById(userInfo.getId());
+        return "User Delete!";
     }
 }

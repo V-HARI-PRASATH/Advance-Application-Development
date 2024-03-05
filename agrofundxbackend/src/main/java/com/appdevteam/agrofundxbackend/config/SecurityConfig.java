@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html",
                         "/swagger-ui/**")
                 .permitAll())
-                .authorizeHttpRequests(requests -> requests.requestMatchers("/api/**")
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/api/**","auth/delete")
                         .authenticated())
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

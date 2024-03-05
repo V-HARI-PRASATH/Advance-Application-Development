@@ -34,5 +34,6 @@ public class AppUser {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     UserInfo userinfo;
 }

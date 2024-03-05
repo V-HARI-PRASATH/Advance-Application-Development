@@ -11,6 +11,7 @@ import com.appdevteam.agrofundxbackend.dto.response.AppUserLoansUsersResponse;
 import com.appdevteam.agrofundxbackend.entity.AppUserLoans;
 import com.appdevteam.agrofundxbackend.entity.Loan;
 import com.appdevteam.agrofundxbackend.mapper.AppUserLoansMapper;
+import com.appdevteam.agrofundxbackend.repository.AppUserLoansRepository;
 import com.appdevteam.agrofundxbackend.repository.LoanRepository;
 import com.appdevteam.agrofundxbackend.service.LoanService;
 
@@ -19,6 +20,9 @@ public class LoanServiceImpl implements LoanService {
 
     @Autowired
     LoanRepository lrepo;
+
+    @Autowired
+    AppUserLoansRepository aulrepo;
 
     @Override
     public List<Loan> getAllLoan()
@@ -53,5 +57,31 @@ public class LoanServiceImpl implements LoanService {
             return laulur;
         }
         return null;
+    }
+    @Override
+    public Loan getLoan(int id)
+    {
+        return lrepo.findById(id).orElse(null);
+    }
+    @Override
+    public Loan updateLoan(Loan loan)
+    {
+        return lrepo.save(loan);
+    }
+    @Override
+    public String deleteLoan(int id)
+    {
+        if(lrepo.existsById(id))
+        {
+            if(!lrepo.findById(id).orElse(null).getAppUserLoans().isEmpty())
+            {
+                return "Users are Enroled in this Loan";
+            }
+            lrepo.deleteById(id);
+            return "Deleted!";
+        }
+        else{
+            return "Not Found";
+        }
     }
 }

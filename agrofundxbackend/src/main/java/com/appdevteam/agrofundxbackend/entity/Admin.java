@@ -1,5 +1,7 @@
 package com.appdevteam.agrofundxbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,5 +27,6 @@ public class Admin {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     UserInfo userinfo;
 }

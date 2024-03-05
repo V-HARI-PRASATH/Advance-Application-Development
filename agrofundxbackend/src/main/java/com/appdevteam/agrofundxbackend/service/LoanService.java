@@ -10,4 +10,7 @@ public interface LoanService {
     List<Loan> getAllLoan();
     Loan createLoan(LoanRequest lr);
     List<AppUserLoansUsersResponse> getLoanUsers(int loanid);
+    Loan getLoan(int id);
+    Loan updateLoan(Loan loan);
+    String deleteLoan(int id);
 }

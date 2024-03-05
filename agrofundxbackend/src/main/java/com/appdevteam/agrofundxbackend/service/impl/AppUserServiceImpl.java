@@ -3,7 +3,6 @@ package com.appdevteam.agrofundxbackend.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.appdevteam.agrofundxbackend.dto.request.AppUserRequest;
 import com.appdevteam.agrofundxbackend.dto.response.AppUserLoansLoansResponse;
 import com.appdevteam.agrofundxbackend.entity.AppUser;
 import com.appdevteam.agrofundxbackend.entity.AppUserLoans;
@@ -24,14 +23,6 @@ public class AppUserServiceImpl implements AppUserService {
         return aurepo.findAll();
     }
     @Override
-    public AppUser createAppUser(AppUserRequest aur)
-    {
-        AppUser au=new AppUser();
-        au.setName(aur.getName());
-        au.setEmail(aur.getEmail());
-        return aurepo.save(au);
-    }
-    @Override
     public List<AppUserLoansLoansResponse> getUserLoans(int userid)
     {
         AppUser au=aurepo.findById(userid).orElse(null);
@@ -47,5 +38,15 @@ public class AppUserServiceImpl implements AppUserService {
             return laullr;
         }
         return null;
+    }
+    @Override
+    public AppUser updateAppUser(AppUser app_User)
+    {
+        return aurepo.save(app_User);
+    }
+    @Override
+    public AppUser getAppUser(int id)
+    {
+        return aurepo.findById(id).orElse(null);
     }
 }
