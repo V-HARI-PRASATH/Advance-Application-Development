@@ -13,6 +13,8 @@ import Loans from './pages/user/Loans';
 import Loan from './pages/user/Loan';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import LoanApproval from './pages/admin/LoanApproval';
+import AddLoan from './pages/admin/AddLoan';
+import MyLoans from './pages/user/MyLoans';
 
 const Navi=()=>{
   const location=useLocation();
@@ -43,8 +45,10 @@ function App() {
         <Route path='/transactionhistory' Component={TransactionHistory}/>
         <Route path='/about' Component={About}/>
         <Route path='/loans' Component={Loans}/>
-        <Route path='/loan' Component={Loan}/>
+        <Route path='/loan/:id' Component={Loan}/>
         <Route path='/loanapproval' Component={LoanApproval}/>
+        <Route path='/addloan' Component={AddLoan}/>
+        <Route path='/myloans' Component={MyLoans}/>
       </Routes>
     </BrowserRouter>
     </div>

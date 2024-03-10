@@ -5,9 +5,11 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link } from "react-router-dom";
-
-function CustSideBar()
+import { connect } from "react-redux";
+// eslint-disable-next-line react-refresh/only-export-components
+function CustSideBar(props)
 {
+    const list=(props.roles=="ADMIN" && {"Home":"/","Dashboard":"/admindashboard","Loan Approval":"/loanapproval","All Loans":"/loans","About":"/about"})||(props.roles=="USER" && {"Home":"/","Dashboard":"/dashboard","Get Loans":"/loans","My Loans":"/myloans","My Transactions":"/transactionhistory","About":"/about"}||{"Home":"/home","About":"/about"})
     const [visiblity,setVisiblity]=useState("hide");
     const handleMouseOver=()=>{
         setVisiblity("visible");
@@ -36,27 +38,17 @@ function CustSideBar()
             </div>
             <div className={visiblity}>
                 <div className="h2"><h2>Menu</h2></div>
-                <Link to='/'>
-                <div className="h2"><h2>Home</h2></div>
-                </Link>
-                <Link to='/dashboard'>
-                <div className="h2"><h2>Dashboard</h2></div>
-                </Link>
-                <Link to='/transactionhistory'>
-                <div className="h2"><h2>Transaction History</h2></div>
-                </Link>
-                <Link to='/loans'>
-                <div className="h2"><h2>Loans</h2></div>
-                </Link>
-                <Link to='/admindashboard'>
-                <div className="h2"><h2>Admin Dashboard</h2></div>
-                </Link>
-                <Link to='/about'>
-                <div className="h2"><h2>About</h2></div>
-                </Link>
+                {Object.keys(list).map((key)=>
+                    <Link to={list[key]} key={key}><div className="h2"><h2>{key}</h2></div></Link>
+                    )}
             </div>
         </div>
     )
 }
-
-export default CustSideBar;
+const mapstateToprops=(state)=>{
+    return{
+        roles:state.roles
+    }
+}
+// eslint-disable-next-line react-refresh/only-export-components
+export default connect(mapstateToprops,null)(CustSideBar);

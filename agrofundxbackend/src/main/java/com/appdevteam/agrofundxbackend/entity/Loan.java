@@ -26,10 +26,9 @@ public class Loan {
     String name;
     String description;
     float rateOfIntrest;
-    int minLoanAmt;
-    int maxLoanAmt;
-    int minLoanPeriod;
-    int maxLoanPeriod;
+    int LoanAmt;
+    int loanTenure;
+    String eligibility;
 
     @OneToMany(mappedBy = "loan")
     @JsonIgnore

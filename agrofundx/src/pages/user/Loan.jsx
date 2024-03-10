@@ -1,72 +1,147 @@
 // LoanDetailsPage.jsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../assets/css/Loan.css';
+import { getLoan } from '../../apis/Common';
+import { useNavigate, useParams } from 'react-router-dom';
+import { connect } from "react-redux";
+import Custbtn from '../../components/Custbtn';
+import { deleteLoan, updateLoan } from '../../apis/Admin';
+import { addLoanToUser } from '../../apis/User';
 
-function Loan() {
+
+// eslint-disable-next-line react-refresh/only-export-components
+function Loan(props) {
+  const navigate=useNavigate();
+  const params=useParams();
+  const [loan,setLoan]=useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoan((await getLoan(params.id)).data);
+    };
+    fetchData();
+  }, [params.id]);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    amount: '',
-    uploadFile: null,
+    aadar: null,
+    pan:null,
+    landdoc:null,
   });
+
+  const handleAadarChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, aadar: file });
+  };
+  const handlePanChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, pan: file });
+  };
+  const handleLandDocChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, landdoc: file });
+  };
+
+  const handleSubmit =async (e) => {
+    e.preventDefault();
+    // Add your submission logic here
+    console.log((await addLoanToUser(props.id,params.id)).data);
+    navigate("/myloans");
+    console.log('Form submitted:', formData);
+  };
+  
+  const deleteloan=async()=>{
+    console.log((await deleteLoan(params.id)).data);
+    navigate("/loans");
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({ ...formData, uploadFile: file });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your submission logic here
-    console.log('Form submitted:', formData);
-  };
+    setLoan(prevLoan => ({
+        ...prevLoan,
+        [name]: value
+    }));
+};
+const handleSubmitUpdate = async(e) => {
+  e.preventDefault();
+  // Add your submission logic here
+  console.log((await updateLoan(params.id,loan)).data);
+  navigate("/loans");
+};
 
   return (
     <div className="loan-details-container">
       <h1 className="loan-details-heading">Loan Details</h1>
 
       <div className="loan-details-content">
-        <p>Loan Type: Agriculture Loan</p>
-        <p>Loan Amount: $10,000</p>
-        <p>Tenure: 24 months</p>
-        <p>Interest Rate: 5%</p>
-        {/* Add more loan details as needed */}
+        <p>Name: {loan!=null && loan.name}</p>
+        <p>Description: {loan!=null && loan.description}</p>
+        <p>Eligibility: {loan!=null && loan.eligibility}</p>
+        <p>Loan Amount: $ {loan!=null && loan.loanAmt}</p>
+        <p>Interest Rate: {loan!=null && loan.rateOfIntrest} % per annum</p>
+        <p>Tenure: {loan!=null && loan.loanTenure} year&apos;s</p>
       </div>
-
-      <form className="loan-application-form" onSubmit={handleSubmit}>
-        <h2>Apply for the Loan</h2>
-
+      {props.roles=="ADMIN" && <Custbtn lable="Delete" func={deleteloan}/>}
+      {props.roles=="ADMIN" &&
+        <form className="loan-application-form" onSubmit={handleSubmitUpdate}>
         <label>
-          Name:
-          <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
+          Name
+          <input type="text" name="name" value={loan!=null && loan.name}  onChange={handleInputChange}/>
         </label>
-
         <label>
-          Email:
-          <input type="email" name="email" value={formData.email} onChange={handleInputChange} />
+          Description
+          <input type="text" name="description" value={loan!=null && loan.description}  onChange={handleInputChange}/>
         </label>
-
         <label>
-          Loan Amount:
-          <input type="text" name="amount" value={formData.amount} onChange={handleInputChange} />
+          Eligibility
+          <input type="text" name="eligibility" value={loan!=null && loan.eligibility}  onChange={handleInputChange}/>
         </label>
-
         <label>
-          Upload Documents:
-          <input type="file" name="uploadFile" onChange={handleFileChange} />
+          Amount
+          <input type="number" name="loanAmt" value={loan!=null && loan.loanAmt}  onChange={handleInputChange}/>
+        </label>
+        <label>
+          RateOfIntrest
+          <input type="text" name="rateOfIntrest" value={loan!=null && loan.rateOfIntrest}  onChange={handleInputChange}/>
+        </label>
+        <label>
+          Tenure
+          <input type="number" name="loanTenure" value={loan!=null && loan.loanTenure}  onChange={handleInputChange}/>
         </label>
 
         <button type="submit" className="apply-button">
-          Apply Now
+          Update
         </button>
       </form>
+
+      }
+{props.roles=="USER" &&
+      <form className="loan-application-form" onSubmit={handleSubmit}>
+        <h2>Apply for the Loan</h2>
+        Upload Documents:
+        <label>
+          Aadhar Card
+          <input type="file" name="uploadFile" onChange={handleAadarChange} />
+        </label>
+        <label>
+          Pan Card
+          <input type="file" name="uploadFile" onChange={handlePanChange} />
+        </label>
+        <label>
+          Land Documents
+          <input type="file" name="uploadFile" onChange={handleLandDocChange} />
+        </label>
+
+        <button type="submit" className="apply-button">
+          Apply
+        </button>
+      </form>
+}
     </div>
   );
 }
-
-export default Loan;
+const mapstateToprops=(state)=>{
+  return{
+      id:state.id,
+      roles:state.roles
+  }
+}
+// eslint-disable-next-line react-refresh/only-export-components
+export default connect(mapstateToprops,null)(Loan);

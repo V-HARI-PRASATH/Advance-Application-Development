@@ -1,5 +1,4 @@
 // HomePage.jsx
-import { Link } from 'react-router-dom';
 import '../../assets/css/Home.css';
 import img from '../../assets/images/login.jpg';
 const Home = () => {
@@ -49,9 +48,9 @@ const Home = () => {
         <h2>Ready to Start?</h2>
         <p>Join Agro Funding today and be a part of the agricultural revolution!</p>
         {/* Add a button or link to the signup page */}
-        <Link to='/login'><a className="cta-button">
+        {/* <Link to='/login'><a className="cta-button">
           Sign Up Now
-        </a></Link>
+        </a></Link> */}
       </section>
 
       <footer>

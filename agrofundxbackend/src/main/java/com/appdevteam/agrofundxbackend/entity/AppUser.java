@@ -27,6 +27,9 @@ public class AppUser {
     int id;
     String name;
     String email;
+    String phone;
+    int age;
+    String address;
 
     @OneToMany(mappedBy = "appuser")
     @JsonIgnore

@@ -50,3 +50,9 @@
     border-style: solid;
     display: none;
 }
+.loginsignup{
+    float: right;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 50px;
+}

@@ -4,6 +4,7 @@ import  loginimg from "../../assets/images/login.jpg"
 import "../../assets/css/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { signup } from "../../apis/Auth";
 
 function Signup()
 {
@@ -22,6 +23,7 @@ function Signup()
     const [emailclass,setEmailclass]=useState("");
     useEffect(()=>{
         passStrength();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[pass]);
     const onChangeEmail=(event)=>{
         setEmail(event.target.value);
@@ -151,8 +153,11 @@ function Signup()
     const handleClick= async ()=>{
         if(valid())
         {
-            navigate('/');
-    }
+            if((await signup(uname,pass,email)).data)
+            {
+                navigate('/login');
+            }
+        }
 
     }
     return(

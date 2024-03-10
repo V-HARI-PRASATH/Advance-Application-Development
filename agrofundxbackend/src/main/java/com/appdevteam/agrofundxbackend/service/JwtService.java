@@ -51,12 +51,14 @@ public class JwtService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public String generateToken(String userName) {
+    public String generateToken(String userName,String roles,Integer id) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName);
+        return createToken(claims, userName,roles,id);
     }
 
-    private String createToken(Map<String, Object> claims, String userName) {
+    private String createToken(Map<String, Object> claims, String userName,String roles,Integer id) {
+        claims.put("roles", roles);
+        claims.put("id",id);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)

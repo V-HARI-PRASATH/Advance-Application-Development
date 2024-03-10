@@ -4,9 +4,14 @@ import Custbtn from "../../components/Custbtn";
 import loginimg from "../../assets/images/login.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { login } from "../../apis/Auth";
+import { connect } from 'react-redux';
+import {jwtDecode} from 'jwt-decode';
 
 
-function Login()
+
+// eslint-disable-next-line react-refresh/only-export-components
+function Login(props)
 {
     const navigate=useNavigate();
     const [uname,setUname]=useState("");
@@ -50,7 +55,25 @@ function Login()
     const handleClick= async ()=>{
         if(valid())
         {
-            navigate('/');
+            const token=(await login(uname,pass)).data;
+            if(token!=null)
+            {
+                localStorage.setItem("JWTtoken",token);
+                props.setUsername(uname);
+                const decodedToken = jwtDecode(token);
+                const userRole = decodedToken.roles;
+                const id=decodedToken.id;
+                props.setRoles(userRole);
+                props.setId(id);
+                navigate('/');
+            }
+            else
+            {
+                setUnameer("Please enter valid username");
+                setUclass("err");
+                setPasser("Please enter valid password");
+                setPclass("err");
+            }
         }
     }
     return(
@@ -68,4 +91,12 @@ function Login()
 
 }
 
-export default Login;
+const mapdispactToprops=(dispatch)=>{
+    return{
+        setUsername:(uname)=>{dispatch({type:"setUsername",username:uname})},
+        setRoles:(roles)=>{dispatch({type:"setRoles",roles:roles})},
+        setId:(id)=>{dispatch({type:"setId",id:id})},
+    }
+}
+// eslint-disable-next-line react-refresh/only-export-components
+export default connect(null,mapdispactToprops)(Login);

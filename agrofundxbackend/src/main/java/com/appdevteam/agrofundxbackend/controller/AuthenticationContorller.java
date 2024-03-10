@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ import com.appdevteam.agrofundxbackend.service.JwtService;
 
 @RequestMapping("/auth")
 @RestController
+@CrossOrigin(origins = "http://localhost:5173/")
 public class AuthenticationContorller {
 
     @Autowired
@@ -78,7 +80,15 @@ public class AuthenticationContorller {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUsername());
+            UserInfo userInfo=repository.findByName(authRequest.getUsername()).orElse(null);
+            int id=-1;
+            if(!userInfo.getRoles().equals("ADMIN"))
+            {
+                AppUser appUser=aurepo.findByUserinfo(userInfo);
+                id=appUser.getId();
+
+            }
+            return jwtService.generateToken(authRequest.getUsername(),userInfo.getRoles(),id);
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }

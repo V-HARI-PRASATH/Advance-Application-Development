@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.appdevteam.agrofundxbackend.dto.request.LoanRequest;
 import com.appdevteam.agrofundxbackend.dto.response.AppUserLoansUsersResponse;
 import com.appdevteam.agrofundxbackend.entity.AppUserLoans;
 import com.appdevteam.agrofundxbackend.entity.Loan;
@@ -30,16 +29,16 @@ public class LoanServiceImpl implements LoanService {
         return lrepo.findAll();
     }
     @Override
-    public Loan createLoan(LoanRequest lr)
+    public Loan createLoan(Loan l)
     {
-        Loan l=new Loan();
-        l.setName(lr.getName());
-        l.setDescription(lr.getDescription());
-        // l.setMaxLoanAmt(lr.getMaxLoanAmt());
-        // l.setMaxLoanPeriod(lr.getMinLoanPeriod());
-        // l.setMinLoanAmt(lr.getMinLoanAmt());
-        // l.setMinLoanPeriod(lr.getMinLoanPeriod());
-        // l.setRateOfIntrest(lr.getRateOfIntrest());
+        // Loan l=new Loan();
+        // l.setName(lr.getName());
+        // l.setDescription(lr.getDescription());
+        // // l.setMaxLoanAmt(lr.getMaxLoanAmt());
+        // // l.setMaxLoanPeriod(lr.getMinLoanPeriod());
+        // // l.setMinLoanAmt(lr.getMinLoanAmt());
+        // // l.setMinLoanPeriod(lr.getMinLoanPeriod());
+        // // l.setRateOfIntrest(lr.getRateOfIntrest());
         return lrepo.save(l);
     }
     @Override

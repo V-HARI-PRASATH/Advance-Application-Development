@@ -2,18 +2,26 @@ import { useEffect, useState } from "react";
 import "../assets/css/CustNavBar.css";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Custbtn from "../components/Custbtn"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
 
-function CustNavBar()
+
+// eslint-disable-next-line react-refresh/only-export-components
+function CustNavBar(props)
 {
+    const navigate=useNavigate();
     const [profboxvisibility,setProfboxvisibility]=useState("profboxhide");
     const handleMouseOver=()=>{
         setProfboxvisibility("profboxvis");
     }
     useEffect(()=>{
         const el=document.getElementById('profilediv');
-        el.addEventListener('mouseover',handleMouseOver);
-        return ()=>el.removeEventListener('mouseover',handleMouseOver);
+        if(el)
+        {
+            // const el=document.getElementById('profilediv');
+            el.addEventListener('mouseover',handleMouseOver);
+            return ()=>el.removeEventListener('mouseover',handleMouseOver);
+        }
     })
     const handleMouseOut=()=>{
         setProfboxvisibility("profboxhide");
@@ -26,22 +34,41 @@ function CustNavBar()
             return ()=>el.removeEventListener('mouseout',handleMouseOut);
         }
     })
+    const logout=()=>{
+        localStorage.removeItem('JWTtoken');
+        props.setUsername();
+        props.setRoles();
+        props.setId();
+        navigate("/login");
+    }
     
     return(
         <div className="custnavbar">
             <div className="navbar">
-                <div id="profilediv">
+            {(props.username!=null && <div id="profilediv">
                 <button className="profile" id="profile"><AccountCircleIcon fontSize="large"/>
-                    <div className="profname">Hariprasath</div>
+                    <div className="profname">{props.username}</div>
                 </button> 
                 <div className={profboxvisibility} id={profboxvisibility}>
                         <Link to='/profile'><Custbtn lable="Profile"/></Link>
-                        <Link to='/login'><Custbtn lable="Logout"/></Link>
+                        <Custbtn lable="Logout" func={logout}/>
                 </div>
-                </div>
+                </div>)||<Link className="loginsignup" to='/login'><Custbtn lable="Login/SignUp"/></Link>}
             </div>
         </div>
     )
 }
-
-export default CustNavBar;
+const mapstateToprops=(state)=>{
+    return{
+        username:state.username
+    }
+}
+const mapdispactToprops=(dispatch)=>{
+    return{
+        setUsername:()=>{dispatch({type:"setUsername",username:null})},
+        setRoles:()=>{dispatch({type:"setRoles",roles:null})},
+        setId:()=>{dispatch({type:"setId",id:null})},
+    }
+}
+// eslint-disable-next-line react-refresh/only-export-components
+export default connect(mapstateToprops,mapdispactToprops)(CustNavBar);

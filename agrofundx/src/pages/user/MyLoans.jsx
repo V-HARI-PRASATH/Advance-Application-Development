@@ -1,41 +1,42 @@
 // AgricultureLoanSchemes.jsx
 import { Link } from 'react-router-dom';
 import '../../assets/css/Loans.css';
-import { getAllLoans } from '../../apis/Common';
+import { getUserLoans } from '../../apis/Common';
 import { useEffect, useState } from 'react';
 import { connect } from "react-redux";
-import Custbtn from '../../components/Custbtn';
 
 // eslint-disable-next-line react-refresh/only-export-components
-const Loans = (props) => {
+const MyLoans = (props) => {
   const [schemes,setSchemes]=useState(null);
   useEffect(() => {
     const fetchData = async () => {
-      setSchemes((await getAllLoans()).data);
+      setSchemes((await getUserLoans(props.id)).data);
     };
     fetchData();
   }, []);
   return (
     <div className="schemes-container">
-      <h1 className="schemes-heading">Agriculture Loan Schemes</h1>
-      {props.roles=="ADMIN" && <center><Link to="/addloan"><Custbtn lable="Add New Loan"/></Link></center>}
+      <h1 className="schemes-heading">My Loan&apos;s</h1>
       <div className="schemes-list">
         {schemes!=null && schemes!=undefined && schemes.map((scheme) => (
-          <Link to={`/loan/${scheme.id}`} key={scheme.id} className="scheme-card">
-            <h2>{scheme.name}</h2>
-            <p className="scheme-description">{scheme.description}</p>
+          <Link to={`/myloan/${scheme.loan.id}`} key={scheme.loan.id} className="scheme-card">
+            <h2>{scheme.loan.name}</h2>
+            <p className="scheme-description">{scheme.loan.description}</p>
             <div className="scheme-details">
               <p>
-                <strong>Eligibility:</strong> {scheme.eligibility}
+                <strong>Eligibility:</strong> {scheme.loan.eligibility}
               </p>
               <p>
-                <strong>Loan Amount:</strong>$ {scheme.loanAmt}
+                <strong>Loan Amount:</strong>$ {scheme.loan.loanAmt}
               </p>
               <p>
-                <strong>Interest Rate:</strong> {scheme.rateOfIntrest} % pre annum (fixed)
+                <strong>Interest Rate:</strong> {scheme.loan.rateOfIntrest} % pre annum (fixed)
               </p>
               <p>
-                <strong>Loan Tenure:</strong> {scheme.loanTenure} year&apos;s
+                <strong>Loan Tenure:</strong> {scheme.loan.loanTenure} year&apos;s
+              </p>
+              <p>
+                <strong>Status:</strong> {scheme.status}
               </p>
             </div>
           </Link>
@@ -46,8 +47,8 @@ const Loans = (props) => {
 };
 const mapstateToprops=(state)=>{
   return{
-      roles:state.roles
+      id:state.id
   }
 }
 // eslint-disable-next-line react-refresh/only-export-components
-export default connect(mapstateToprops,null)(Loans);
+export default connect(mapstateToprops,null)(MyLoans);
