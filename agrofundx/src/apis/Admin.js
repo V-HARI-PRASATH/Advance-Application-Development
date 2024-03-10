@@ -26,4 +26,17 @@ export async function updateLoan(id,loan)
 
 }
 
+export async function updateLoanStatus(id,status)
+{
+    const token=localStorage.getItem('JWTtoken');
+    return resolve(axios.put(`http://localhost:8080/api/loan/updatestatus/${id}/${status}`,{},{headers:{"Authorization": `Bearer ${token}`,},}).then(res=>res.data));
+
+}
+export async function getPendingLoans()
+{
+    const token=localStorage.getItem('JWTtoken');
+    return resolve(axios.get(`http://localhost:8080/api/loan/getPendingLoans`,{headers:{"Authorization": `Bearer ${token}`,},}).then(res=>res.data));
+
+}
+
 //getallusersoftheloanbyid
